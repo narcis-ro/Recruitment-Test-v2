@@ -1,6 +1,4 @@
-﻿using JG.FinTechTest.Domain.TaxProcessors;
-
-namespace JG.FinTechTest.Domain.Handlers
+﻿namespace JG.FinTechTest.Domain.TaxProcessors
 {
     public class NoTaxProcessor : ITaxProcessor
     {

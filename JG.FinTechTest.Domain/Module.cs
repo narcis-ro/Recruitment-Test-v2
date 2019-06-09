@@ -2,6 +2,7 @@
 using JG.FinTechTest.Domain.Config;
 using JG.FinTechTest.Domain.TaxEngine;
 using JG.FinTechTest.Domain.TaxProcessors;
+using LiteDB;
 using Microsoft.Extensions.Configuration;
 
 namespace JG.FinTechTest.Domain
@@ -29,6 +30,8 @@ namespace JG.FinTechTest.Domain
 
                 return donationConfig;
             }).AsSelf().SingleInstance();
+
+            builder.Register(c => new LiteDatabase(@"MyData.db")).As<LiteDatabase>().SingleInstance();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 
 namespace JG.FinTechTest.Domain.TaxProcessors
 {

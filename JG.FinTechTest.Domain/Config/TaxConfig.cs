@@ -2,7 +2,6 @@
 using JG.FinTechTest.Domain.TaxEngine;
 using JG.FinTechTest.Domain.TaxProcessors;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 
 namespace JG.FinTechTest.Domain.Config
 {

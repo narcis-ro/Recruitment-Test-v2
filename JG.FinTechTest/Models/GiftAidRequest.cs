@@ -21,17 +21,15 @@ namespace JG.FinTechTest.Models
     /// <inheritdoc />
     public class GiftAidRequestValidator : AbstractValidator<GiftAidRequest>
     {
-        private readonly DonationConfig _config;
-
         /// <inheritdoc />
         public GiftAidRequestValidator(DonationConfig config)
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
+            if (config == null) throw new ArgumentNullException(nameof(config));
 
             RuleFor(x => x.Amount)
                 .NotEmpty()
-                .GreaterThan(_config.MinDonationAmount)
-                .LessThan(_config.MaxDonationAmount ?? decimal.MaxValue);
+                .GreaterThan(config.MinDonationAmount)
+                .LessThan(config.MaxDonationAmount ?? decimal.MaxValue);
         }
     }
 }

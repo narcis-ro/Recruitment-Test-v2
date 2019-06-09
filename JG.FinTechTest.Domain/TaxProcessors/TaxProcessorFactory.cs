@@ -1,6 +1,5 @@
 ﻿using System;
 using JG.FinTechTest.Domain.Config;
-using JG.FinTechTest.Domain.Handlers;
 using JG.FinTechTest.Domain.TaxProcessors.SimplePercent;
 using Microsoft.Extensions.Configuration;
 

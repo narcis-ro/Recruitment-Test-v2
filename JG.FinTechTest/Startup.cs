@@ -96,6 +96,7 @@ namespace JG.FinTechTest
 
             containerBuilder.Populate(services);
 
+            containerBuilder.RegisterType<LiteDbStartupTask>().As<IStartupTask>();
 
             // ReSharper disable RedundantNameQualifier
             containerBuilder.RegisterModule<Infrastructure.Logging.Module>();

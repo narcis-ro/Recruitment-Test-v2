@@ -9,9 +9,12 @@ namespace JG.FinTechTest.Filters
     /// <inheritdoc />
     public class DomainExceptionFilter : DefaultDomainExceptionFilter
     {
+        // ReSharper disable once RedundantOverriddenMember - For demo purposes
         /// <inheritdoc />
         protected override HttpStatusCode? MapErrorCode(ExceptionContext context, DomainException domainException)
         {
+            // TODO: Map Specific Domain error codes to HttpStatus
+
             return base.MapErrorCode(context, domainException);
         }
     }

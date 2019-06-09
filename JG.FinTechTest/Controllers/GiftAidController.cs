@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading.Tasks;
 using JG.FinTechTest.Domain.Requests;
 using JG.FinTechTest.Models;
+using JG.Infrastructure.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,6 +34,7 @@ namespace JG.FinTechTest.Controllers
         /// <returns></returns>
         [HttpGet]
         [ProducesResponseType((int) HttpStatusCode.OK, Type = typeof(GiftAidResponse))]
+        [ProducesResponseType((int) HttpStatusCode.BadRequest, Type = typeof(ApiError))]
         public async Task<ActionResult<GiftAidResponse>> Get([FromQuery] GiftAidRequest request)
         {
             var response = await _mediator.Send(new CalculateGiftAidRequest

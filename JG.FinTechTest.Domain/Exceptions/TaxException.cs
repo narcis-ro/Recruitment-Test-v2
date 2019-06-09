@@ -1,6 +1,5 @@
-﻿using System;
-using JG.FinTechTest.Domain.Handlers;
-using JG.FinTechTest.Domain.TaxEngine;
+﻿using JG.FinTechTest.Domain.TaxEngine;
+using JG.FinTechTest.Domain.TaxProcessors;
 using JG.Infrastructure.Exceptions;
 
 namespace JG.FinTechTest.Domain.Exceptions

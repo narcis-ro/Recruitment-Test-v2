@@ -4,6 +4,6 @@
     {
         MultiValidationException = -2,
         InternalApiError = -1,
-        Unknown = 0,
+        Unknown = 0
     }
 }

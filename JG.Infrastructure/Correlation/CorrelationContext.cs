@@ -3,10 +3,20 @@
 namespace JG.Infrastructure.Correlation
 {
     /// <summary>
-    /// Provides access to per request correlation properties.
+    ///     Provides access to per request correlation properties.
     /// </summary>
     public class CorrelationContext
     {
+        /// <summary>
+        ///     The Correlation ID which is applicable to the current request.
+        /// </summary>
+        public string CorrelationId { get; }
+
+        /// <summary>
+        ///     The name of the header from which the Correlation ID is read/written.
+        /// </summary>
+        public string Header { get; }
+
         internal CorrelationContext(string correlationId, string header)
         {
             if (string.IsNullOrEmpty(correlationId))
@@ -18,15 +28,5 @@ namespace JG.Infrastructure.Correlation
             CorrelationId = correlationId;
             Header = header;
         }
-
-        /// <summary>
-        /// The Correlation ID which is applicable to the current request.
-        /// </summary>
-        public string CorrelationId { get; }
-
-        /// <summary>
-        /// The name of the header from which the Correlation ID is read/written.
-        /// </summary>
-        public string Header { get; }
     }
 }

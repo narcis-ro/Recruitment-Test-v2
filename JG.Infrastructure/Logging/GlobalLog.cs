@@ -1,4 +1,4 @@
-﻿using ILogger = Microsoft.Extensions.Logging.ILogger;
+﻿using Microsoft.Extensions.Logging;
 
 namespace JG.Infrastructure.Logging
 {

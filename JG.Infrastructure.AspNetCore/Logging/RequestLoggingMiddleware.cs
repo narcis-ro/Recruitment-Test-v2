@@ -17,16 +17,18 @@ using Serilog.Events;
 namespace JG.Infrastructure.AspNetCore.Logging
 {
     /// <summary>
-    /// Middleware that logs HTTP request and response details.
+    ///     Middleware that logs HTTP request and response details.
     /// </summary>
     public class RequestLoggingMiddleware
     {
-        private const string MessageTemplate = "HTTP {Verb} to {Path} responded with {StatusCode} in {Elapsed:0.0000} ms";
+        private const string MessageTemplate =
+            "HTTP {Verb} to {Path} responded with {StatusCode} in {Elapsed:0.0000} ms";
+
+        private readonly ILogger _logger;
 
         private readonly RequestDelegate _next;
         private readonly RequestLoggingOptions _options;
-        private readonly ILogger _logger;
-        private RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
 
         public RequestLoggingMiddleware(RequestDelegate next, ILogger logger, RequestLoggingOptions options)
         {
@@ -71,14 +73,18 @@ namespace JG.Infrastructure.AspNetCore.Logging
                     var forError = statusCode > 399;
                     var level = forError ? LogEventLevel.Error : LogEventLevel.Information;
 
-                    var contextualLogger = await PopulateLogContext(_logger, httpContext, responseBody, requestLogContext, requestLogContextForError, forError);
+                    var contextualLogger = await PopulateLogContext(_logger, httpContext, responseBody,
+                        requestLogContext, requestLogContextForError, forError);
 
-                    contextualLogger.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, statusCode, stopwatch.Elapsed.TotalMilliseconds);
+                    contextualLogger.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path,
+                        statusCode, stopwatch.Elapsed.TotalMilliseconds);
                 }
                 catch (Exception ex)
                 {
-                    (await PopulateLogContext(_logger, httpContext, responseBody, requestLogContext, requestLogContextForError, true))
-                        .Error(ex, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500, stopwatch.Elapsed.TotalMilliseconds);
+                    (await PopulateLogContext(_logger, httpContext, responseBody, requestLogContext,
+                            requestLogContextForError, true))
+                        .Error(ex, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500,
+                            stopwatch.Elapsed.TotalMilliseconds);
 
                     // Note: The MVC Exception filter should have caught the error. If it got to this point, it means it
                     // Note: it's an unhandled (unknown exception) and we just log it. The higher middleware (UnhandledExceptionMiddleware) will catch it.
@@ -93,7 +99,8 @@ namespace JG.Infrastructure.AspNetCore.Logging
             }
         }
 
-        private async Task<ILogger> PopulateLogContext(ILogger logger, HttpContext httpContext, MemoryStream responseBody, ConcurrentDictionary<string, object> requestLogContext,
+        private async Task<ILogger> PopulateLogContext(ILogger logger, HttpContext httpContext,
+            MemoryStream responseBody, ConcurrentDictionary<string, object> requestLogContext,
             ConcurrentDictionary<string, object> requestLogContextForError, bool forError)
         {
             try
@@ -102,10 +109,11 @@ namespace JG.Infrastructure.AspNetCore.Logging
 
                 var props = new Dictionary<string, object>(requestLogContext)
                 {
-                    [LogProps.QUERY] = request.QueryString.ToString(),
+                    [LogProps.QUERY] = request.QueryString.ToString()
                 };
 
-                var upstreamServiceName = request.Headers.FirstOrDefault(s => s.Key == HttpHeaders.X_ORIGIN_SERVICE_NAME);
+                var upstreamServiceName =
+                    request.Headers.FirstOrDefault(s => s.Key == HttpHeaders.X_ORIGIN_SERVICE_NAME);
                 var upstreamServiceId = request.Headers.FirstOrDefault(s => s.Key == HttpHeaders.X_ORIGIN_SERVICE_ID);
 
                 if (upstreamServiceId.Key != default)
@@ -141,13 +149,15 @@ namespace JG.Infrastructure.AspNetCore.Logging
             }
         }
 
-        private async Task<Dictionary<string, object>> PopulateLogContextForError(HttpContext httpContext, MemoryStream responseBody)
+        private async Task<Dictionary<string, object>> PopulateLogContextForError(HttpContext httpContext,
+            MemoryStream responseBody)
         {
             var request = httpContext.Request;
 
             var props = new Props
             {
-                [LogProps.HEADERS] = request.Headers.Where(h => h.Key != HttpHeaders.AUTHORIZATION).ToDictionary(h => h.Key, h => h.Value.ToString())
+                [LogProps.HEADERS] = request.Headers.Where(h => h.Key != HttpHeaders.AUTHORIZATION)
+                    .ToDictionary(h => h.Key, h => h.Value.ToString())
             };
 
 
@@ -155,7 +165,6 @@ namespace JG.Infrastructure.AspNetCore.Logging
                 props.Add(LogProps.FORM, request.Form.ToDictionary(v => v.Key, v => v.Value.ToString()));
 
             if (request.Body != null)
-            {
                 try
                 {
                     request.EnableBuffering();
@@ -179,7 +188,6 @@ namespace JG.Infrastructure.AspNetCore.Logging
                 {
                     _logger.Error(e, "Failed to read http stream body.");
                 }
-            }
 
 
             var responseProps = new Props();
@@ -207,10 +215,10 @@ namespace JG.Infrastructure.AspNetCore.Logging
         }
 
         /// <summary>
-        /// This class ensures that a stopwatch is stopped when an exception occurs without 
-        /// needing multiple <see cref="Stopwatch.Stop"/> calls.
+        ///     This class ensures that a stopwatch is stopped when an exception occurs without
+        ///     needing multiple <see cref="Stopwatch.Stop" /> calls.
         /// </summary>
-        class BenchmarkToken : IDisposable
+        private class BenchmarkToken : IDisposable
         {
             private readonly Stopwatch _stopwatch;
 
@@ -220,7 +228,10 @@ namespace JG.Infrastructure.AspNetCore.Logging
                 _stopwatch.Start();
             }
 
-            public void Dispose() => _stopwatch.Stop();
+            public void Dispose()
+            {
+                _stopwatch.Stop();
+            }
         }
     }
 }

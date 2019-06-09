@@ -28,7 +28,8 @@ namespace JG.Infrastructure.AspNetCore.Exceptions
             catch (ApiException apiException)
             {
                 httpContext.Response.StatusCode = (int) apiException.StatusCode;
-                httpContext.Response.Headers.Add(HttpHeaders.REASON_PHRASE, apiException.DeveloperMessage ?? apiException.Message);
+                httpContext.Response.Headers.Add(HttpHeaders.REASON_PHRASE,
+                    apiException.DeveloperMessage ?? apiException.Message);
             }
             catch (Exception)
             {

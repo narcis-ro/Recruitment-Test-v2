@@ -15,9 +15,9 @@ namespace JG.Infrastructure.Logging
     public class SerilogBuilder
     {
         private readonly IConfiguration _configuration;
+        private string _environment;
 
         private LoggerConfiguration _loggerConfiguration = new LoggerConfiguration();
-        private string _environment;
 
         public SerilogBuilder(IConfiguration configuration = default)
         {
@@ -101,8 +101,9 @@ namespace JG.Infrastructure.Logging
             _loggerConfiguration.Enrich.With(new CorrelationEnricher(new CorrelationContextAccessor()));
 
             // TODO: Revisit this, although Props is shorter, how much does it cost us to clone the dictionary?
-            _loggerConfiguration.Destructure.ByTransformingWhere<Props>(type => type == typeof(Props), value => value.ToDictionary(entry => entry.Key,
-                entry => entry.Value));
+            _loggerConfiguration.Destructure.ByTransformingWhere<Props>(type => type == typeof(Props), value =>
+                value.ToDictionary(entry => entry.Key,
+                    entry => entry.Value));
 
             return _loggerConfiguration.CreateLogger();
         }

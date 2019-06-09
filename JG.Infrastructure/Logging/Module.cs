@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using ILogger = Serilog.ILogger; 
+using ILogger = Serilog.ILogger;
 
 namespace JG.Infrastructure.Logging
 {

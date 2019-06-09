@@ -7,8 +7,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Dapper.SqlBuilder" Version="1.60.1" />
-    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" />
     <PackageReference Include="MediatR" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JG.Infrastructure\JG.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace JG.Infrastructure.Logging
 {
     /// <summary>
-    /// Used as a shorter name for <see cref="Dictionary{TKey,TValue}"/>
+    ///     Used as a shorter name for <see cref="Dictionary{TKey,TValue}" />
     /// </summary>
     public class Props : Dictionary<string, object>
     {
@@ -16,7 +16,8 @@ namespace JG.Infrastructure.Logging
         {
         }
 
-        public Props(IDictionary<string, object> dictionary, IEqualityComparer<string> comparer) : base(dictionary, comparer)
+        public Props(IDictionary<string, object> dictionary, IEqualityComparer<string> comparer) : base(dictionary,
+            comparer)
         {
         }
 
@@ -24,7 +25,8 @@ namespace JG.Infrastructure.Logging
         {
         }
 
-        public Props(IEnumerable<KeyValuePair<string, object>> collection, IEqualityComparer<string> comparer) : base(collection, comparer)
+        public Props(IEnumerable<KeyValuePair<string, object>> collection, IEqualityComparer<string> comparer) : base(
+            collection, comparer)
         {
         }
 

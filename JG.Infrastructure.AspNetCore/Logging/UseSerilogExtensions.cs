@@ -10,7 +10,8 @@ namespace JG.Infrastructure.AspNetCore.Logging
 {
     public static class UseSerilogExtensions
     {
-        public static IWebHostBuilder UseSerilog(this IWebHostBuilder hostBuilder, Action<WebHostBuilderContext, ILoggingBuilder, LoggerConfiguration> configureLogging = default)
+        public static IWebHostBuilder UseSerilog(this IWebHostBuilder hostBuilder,
+            Action<WebHostBuilderContext, ILoggingBuilder, LoggerConfiguration> configureLogging = default)
         {
             hostBuilder.ConfigureLogging((hostingContext, loggingBuilder) =>
             {
@@ -32,11 +33,12 @@ namespace JG.Infrastructure.AspNetCore.Logging
         }
 
         /// <summary>
-        /// Adds the request logging middleware to the application pipeline.
+        ///     Adds the request logging middleware to the application pipeline.
         /// </summary>
         /// <param name="builder">An application builder.</param>
         /// <param name="configureOptions">An optional action that can be used to configure the middleware options.</param>
-        public static IApplicationBuilder UseRequestLogging(this IApplicationBuilder builder, Action<RequestLoggingOptions> configureOptions = null)
+        public static IApplicationBuilder UseRequestLogging(this IApplicationBuilder builder,
+            Action<RequestLoggingOptions> configureOptions = null)
         {
             var options = new RequestLoggingOptions();
             configureOptions?.Invoke(options);

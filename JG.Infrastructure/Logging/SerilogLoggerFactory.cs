@@ -7,26 +7,31 @@ using ILogger = Serilog.ILogger;
 namespace JG.Infrastructure.Logging
 {
     /// <summary>
-    ///    Same as https://github.com/serilog/serilog-aspnetcore/blob/dev/src/Serilog.AspNetCore/AspNetCore/SerilogLoggerFactory.cs, but without dependency to asp net core
+    ///     Same as
+    ///     https://github.com/serilog/serilog-aspnetcore/blob/dev/src/Serilog.AspNetCore/AspNetCore/SerilogLoggerFactory.cs,
+    ///     but without dependency to asp net core
     /// </summary>
     public class SerilogLoggerFactory : ILoggerFactory
     {
         private readonly SerilogLoggerProvider _provider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SerilogLoggerFactory"/> class.
+        ///     Initializes a new instance of the <see cref="SerilogLoggerFactory" /> class.
         /// </summary>
-        /// <param name="logger">The Serilog logger; if not supplied, the static <see cref="Serilog.Log"/> will be used.</param>
-        /// <param name="dispose">When true, dispose <paramref name="logger"/> when the framework disposes the provider. If the
-        /// logger is not specified but <paramref name="dispose"/> is true, the <see cref="Log.CloseAndFlush"/> method will be
-        /// called on the static <see cref="Log"/> class instead.</param>
+        /// <param name="logger">The Serilog logger; if not supplied, the static <see cref="Serilog.Log" /> will be used.</param>
+        /// <param name="dispose">
+        ///     When true, dispose <paramref name="logger" /> when the framework disposes the provider. If the
+        ///     logger is not specified but <paramref name="dispose" /> is true, the <see cref="Log.CloseAndFlush" /> method will
+        ///     be
+        ///     called on the static <see cref="Log" /> class instead.
+        /// </param>
         public SerilogLoggerFactory(ILogger logger = null, bool dispose = false)
         {
             _provider = new SerilogLoggerProvider(logger, dispose);
         }
 
         /// <summary>
-        /// Disposes the provider.
+        ///     Disposes the provider.
         /// </summary>
         public void Dispose()
         {
@@ -34,11 +39,11 @@ namespace JG.Infrastructure.Logging
         }
 
         /// <summary>
-        /// Creates a new <see cref="T:Microsoft.Extensions.Logging.ILogger" /> instance.
+        ///     Creates a new <see cref="T:Microsoft.Extensions.Logging.ILogger" /> instance.
         /// </summary>
         /// <param name="categoryName">The category name for messages produced by the logger.</param>
         /// <returns>
-        /// The <see cref="T:Microsoft.Extensions.Logging.ILogger" />.
+        ///     The <see cref="T:Microsoft.Extensions.Logging.ILogger" />.
         /// </returns>
         public Microsoft.Extensions.Logging.ILogger CreateLogger(string categoryName)
         {
@@ -46,7 +51,7 @@ namespace JG.Infrastructure.Logging
         }
 
         /// <summary>
-        /// Adds an <see cref="T:Microsoft.Extensions.Logging.ILoggerProvider" /> to the logging system.
+        ///     Adds an <see cref="T:Microsoft.Extensions.Logging.ILoggerProvider" /> to the logging system.
         /// </summary>
         /// <param name="provider">The <see cref="T:Microsoft.Extensions.Logging.ILoggerProvider" />.</param>
         public void AddProvider(ILoggerProvider provider)

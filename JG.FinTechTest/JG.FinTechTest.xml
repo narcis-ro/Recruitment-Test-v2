@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JG.FinTechTest</name>
+    </assembly>
+    <members>
+        <member name="T:JG.FinTechTest.Controllers.GiftAidController">
+            <summary>
+                GiftAid Api
+            </summary>
+        </member>
+        <member name="M:JG.FinTechTest.Controllers.GiftAidController.#ctor(MediatR.IMediator,Microsoft.Extensions.Logging.ILogger{JG.FinTechTest.Controllers.GiftAidController})">
+            <inheritdoc />
+        </member>
+        <member name="M:JG.FinTechTest.Controllers.GiftAidController.Get(JG.FinTechTest.Models.GiftAidRequest)">
+            <summary>
+                Get the amount of gift aid reclaimable for donation amount
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JG.FinTechTest.Filters.DomainExceptionFilter">
+            <inheritdoc />
+        </member>
+        <member name="M:JG.FinTechTest.Filters.DomainExceptionFilter.MapErrorCode(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext,JG.Infrastructure.Exceptions.DomainException)">
+            <inheritdoc />
+        </member>
+        <member name="T:JG.FinTechTest.Models.GiftAidRequest">
+            <summary>
+            Request to calculate Gift-Aid tax amount
+            </summary>
+        </member>
+        <member name="P:JG.FinTechTest.Models.GiftAidRequest.Amount">
+            <summary>
+            Donation amount
+            </summary>
+        </member>
+        <member name="T:JG.FinTechTest.Models.GiftAidRequestValidator">
+            <inheritdoc />
+        </member>
+        <member name="M:JG.FinTechTest.Models.GiftAidRequestValidator.#ctor(JG.FinTechTest.Domain.Config.DonationConfig)">
+            <inheritdoc />
+        </member>
+        <member name="T:JG.FinTechTest.Models.GiftAidResponse">
+            <summary>
+            Response containing Gift-Aid amount for a donation.
+            </summary>
+        </member>
+        <member name="P:JG.FinTechTest.Models.GiftAidResponse.GiftAidAmount">
+            <summary>
+            Gift-Aid amount for <see cref="P:JG.FinTechTest.Models.GiftAidResponse.DonationAmount"/>
+            </summary>
+        </member>
+        <member name="P:JG.FinTechTest.Models.GiftAidResponse.DonationAmount">
+            <summary>
+            Donation Amount
+            </summary>
+        </member>
+        <member name="T:JG.FinTechTest.Program">
+            <summary>
+                FinTech  API
+            </summary>
+        </member>
+        <member name="M:JG.FinTechTest.Program.Main(System.String[])">
+            <summary>
+                Main entry-point
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:JG.FinTechTest.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            Creates the AspNetCore web host.
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:JG.FinTechTest.Startup">
+            <summary>
+            AspNetCore startup
+            </summary>
+        </member>
+        <member name="P:JG.FinTechTest.Startup.SwaggerInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:JG.FinTechTest.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <inheritdoc />
+        </member>
+        <member name="M:JG.FinTechTest.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            AspNetCore Configure DI
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:JG.FinTechTest.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+            <param name="loggerFactory"></param>
+        </member>
+    </members>
+</doc>

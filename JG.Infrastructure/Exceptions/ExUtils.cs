@@ -14,7 +14,8 @@ namespace JG.Infrastructure.Exceptions
             }
             catch (Exception ex)
             {
-                GlobalLog.Logger?.LogError("Exceptions.Safe not safe: {ExceptionMessage}. Other info: {log}", ex.Message, log);
+                GlobalLog.Logger?.LogError("Exceptions.Safe not safe: {ExceptionMessage}. Other info: {log}",
+                    ex.Message, log);
             }
         }
 
@@ -26,7 +27,8 @@ namespace JG.Infrastructure.Exceptions
             }
             catch (Exception ex)
             {
-                GlobalLog.Logger?.LogError("Exceptions.Safe not safe: {ExceptionMessage}. Other info: {log}", ex.Message, log);
+                GlobalLog.Logger?.LogError("Exceptions.Safe not safe: {ExceptionMessage}. Other info: {log}",
+                    ex.Message, log);
             }
 
             return default;

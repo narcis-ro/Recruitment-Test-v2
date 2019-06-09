@@ -1,7 +1,7 @@
+using NUnit.Framework;
+
 namespace JG.FinTechTest.UnitTests
 {
-    using NUnit.Framework;
-
     public class Tests
     {
         [SetUp]

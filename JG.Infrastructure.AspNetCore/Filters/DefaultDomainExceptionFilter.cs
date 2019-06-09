@@ -53,7 +53,7 @@ namespace JG.Infrastructure.AspNetCore.Filters
                     // Note: Let global unhandled exception middleware handle this.
                     return;
             }
-            
+
             var contextResult = new ObjectResult(new ApiError
             {
                 StatusCode = statusCode,

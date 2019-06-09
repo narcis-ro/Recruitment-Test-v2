@@ -9,7 +9,10 @@ namespace JG.Infrastructure.Logging.Configuration
     {
         public string Path { get; set; } = "trace.log";
         public LogEventLevel RestrictedToMinimumLevel { get; set; } = LogEventLevel.Verbose;
-        public string OutputTemplate { get; set; } = "{CorrelationId} {Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
+
+        public string OutputTemplate { get; set; } =
+            "{CorrelationId} {Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}";
+
         public long? FileSizeLimitBytes { get; set; } = 1073741824;
         public LoggingLevelSwitch LevelSwitch { get; set; } = null;
         public bool Buffered { get; set; } = false;

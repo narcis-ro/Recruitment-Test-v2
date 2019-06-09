@@ -1,0 +1,13 @@
+* text=false
+*.cs text eol=crlf
+*.sln text eol=crlf
+*.bat text eol=crlf
+*.tt text eol=crlf
+*.xml text eol=crlf
+*.csproj text eol=crlf
+*.config text eol=crlf
+*.xslt text eol=crlf
+*.md text eol=crlf
+*.feature text eol=crlf
+*.sh text eol=lf
+.*rc text eol=lf

@@ -1,4 +1,4 @@
-namespace JG.FinTechTest.UnitTests
+namespace JG.FinTechTest.Domain.UnitTests
 {
     using NUnit.Framework;
 

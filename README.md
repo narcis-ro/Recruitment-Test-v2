@@ -7,7 +7,7 @@ Most of the infrastructure code has been brought in from previous projects. Ther
 Sample unit-tests can be found in the following classes: `DonationControllerTests`, `DonationHandlerTests`, `DonationRequestValidatorTests`. 
 
 In `appSettings.json` you will find the following settings:
-```
+```json
 "Donation": {
     "MinDonationAmount": 2,
     "MaxDonationAmount": 1000000,
@@ -42,7 +42,7 @@ You have the ability to define tax configurations and tax processors. Tax config
 
 The `api` uses `.Net Core 2.2`. To build and run execute the following commands:
 
-```
+```shell
 cd api
 dotnet build
 dotnet run --project JG.FinTechTest\JG.FinTechTest.Api.csproj
@@ -54,7 +54,7 @@ You can browse the `swagger` api specification here: `https://localhost:5001/swa
 
 The front-end has been built using `angular 8`, you need to have node.js v10.9 or greater. To build and run execute the following commands:
 
-```
+```shell
 cd ui
 npm install
 ng serve

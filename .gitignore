@@ -303,3 +303,6 @@ _NCrunch_*/
 
 # VS Code
 .vscode/
+
+#LiteDb
+*.db

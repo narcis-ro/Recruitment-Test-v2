@@ -1,0 +1,115 @@
+<mat-progress-bar mode="indeterminate" *ngIf="isSending"></mat-progress-bar>
+
+<div class="container">
+
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="!sent">
+    <h1 class="display-4">Make a Donation</h1>
+    <p class="lead">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nunc magna, fermentum et erat eu, dictum
+      consequat urna. Cras vitae efficitur elit. Suspendisse potenti. Fusce tincidunt sapien commodo lacus eleifend
+      gravida.
+    </p>
+  </div>
+
+  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="sent">
+    <h1 class="display-4">Thank you for your donation</h1>
+    <p class="lead">
+      Donation Id: {{donationResponse.donationId}} | Gift Aid Reference: {{donationResponse.giftAidReference}} <br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nunc magna, fermentum et erat eu, dictum
+      consequat urna. Cras vitae efficitur elit. Suspendisse potenti. Fusce tincidunt sapien commodo lacus eleifend
+      gravida.
+    </p>
+    <button class="btn btn-success" (click)="reset()">Make another donation</button>
+  </div>
+
+
+  <div *ngIf="!sent">
+
+
+    <div class="row mb-2">
+      <div class="col-md-8">
+        <h4>Donation Info</h4>
+      </div>
+      <div class="col-md-4">
+        <h4>Tax Info</h4>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row"  fxLayout="row" fxLayoutAlign="space-between center" >
+          <div class="col-md-3"><small class="text-muted">{{min_amount | currency: currency_name}}</small></div>
+          <h2>{{amount | currency: currency_name}}</h2>
+          <div class="col-md-3 text-right"><small class="text-muted">{{max_slider | currency: currency_name}}</small></div>
+        </div>
+
+        <mat-slider
+          class="w-100"
+          [max]="max_slider"
+          [min]="min_amount"
+          [step]="50"
+          [tickInterval]="50"
+          [(ngModel)]="amount">
+        </mat-slider>
+
+
+        <form [formGroup]="donationForm">
+        <div class="form-row">
+          <div class="form-group col-6">
+            <input formControlName="firstName" type="text" class="form-control" placeholder="Name" value=""/>
+          </div>
+          <div class="form-group col-6">
+            <input formControlName="lastName" type="text" class="form-control" placeholder="Name" value=""/>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <input formControlName="amount" type="number" [(ngModel)]="amount" class="form-control" placeholder="Amount" value=""/>
+          </div>
+          <div class="form-group col-6">
+            <input formControlName="postCode" type="text" class="form-control" placeholder="Postal Code" value=""/>
+          </div>
+        </div>
+        </form>
+        <button type="button" class="btn btn-lg btn-block btn-primary" [disabled]="!donationForm.valid || isSending || isCalculating" (click)="send()">Donate!</button>
+      </div>
+
+
+      <div class="col-md-4">
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Tax rate</h6>
+              <small class="text-muted">Brief description</small>
+            </div>
+            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.taxRate | number}}%</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+          </li>
+
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Gift aid</h6>
+              <small class="text-muted">Brief description</small>
+            </div>
+            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.giftAid | currency: currency_name}}</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+          </li>
+
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Total donation</h6>
+              <small class="text-muted">Brief description</small>
+            </div>
+            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.totalAmount | currency: currency_name}}</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="text-center mt-5">
+  <p>Copyright 2019</p>
+</footer>

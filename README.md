@@ -62,8 +62,8 @@ ng serve
 
 # How it looks
 
-![screenshot-1](docs\screenshot-1.png)
-![screenshot-2](docs\screenshot-2.png)
+![screenshot-1](https://github.com/narcis-ro/Recruitment-Test-v2/blob/master/docs/screenshot-1.png)
+![screenshot-2](https://github.com/narcis-ro/Recruitment-Test-v2/blob/master/docs/screenshot-2.png)
 
 # JustGiving FinTech Test
 

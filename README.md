@@ -1,3 +1,70 @@
+# A note forward
+
+To say that this exercise has been over-engineered, would probably be the understatement of the year :). It has been purposely done so in order to show the recruiter proof of experience and competence.
+
+Most of the infrastructure code has been brought in from previous projects. There was no sense in developing again all the cross cutting concerns such as logging, correlation, start-up task, etc. Of course there are many ways to do it, project requirements matter a lot.
+
+Sample unit-tests can be found in the following classes: `DonationControllerTests`, `DonationHandlerTests`, `DonationRequestValidatorTests`. 
+
+In `appSettings.json` you will find the following settings:
+```
+"Donation": {
+    "MinDonationAmount": 2,
+    "MaxDonationAmount": 1000000,
+    "Taxes": [
+        {
+            "Name": "Default",
+            "TaxType": "GiftAid",
+            "ProcessorType": "SimplePercent",
+            "ProcessorOptions": {
+                "TaxRate": 20
+            },
+            "FromDate": "2010-01-01 00:00",
+            "ToDate": "2019-11-01 00:00"
+        },
+        {
+            "Name": "AfterBrexit",
+            "TaxType": "GiftAid",
+            "ProcessorType": "SimplePercent",
+            "ProcessorOptions": {
+                "TaxRate": 25
+            },
+            "FromDate": "2019-11-01 00:00"
+        }
+    ]
+}
+```
+You have the ability to define tax configurations and tax processors. Tax configurations are applied based on `TaxType` and date. For example, if the UK decides to leave EU, the tax rate may increase. You can provision these tax configuration in advanced so there is no need of a re-deployment. These would probably go into a database.
+
+# How to build
+
+##### API
+
+The `api` uses `.Net Core 2.2`. To build and run execute the following commands:
+
+```
+cd api
+dotnet build
+dotnet run --project JG.FinTechTest\JG.FinTechTest.Api.csproj
+```
+
+You can browse the `swagger` api specification here: `https://localhost:5001/swagger`. This is generated automatically using `swashbuckle`.
+
+##### UI
+
+The front-end has been built using `angular 8`, you need to have node.js v10.9 or greater. To build and run execute the following commands:
+
+```
+cd ui
+npm install
+ng serve
+```
+
+# How it looks
+
+![screenshot-1](docs\screenshot-1.png)
+![screenshot-2](docs\screenshot-2.png)
+
 # JustGiving FinTech Test
 
 A big part of what we do at JustGiving is reclaim the Gift Aid on donations made to charities. This saves them a lot of time and processing overheads.

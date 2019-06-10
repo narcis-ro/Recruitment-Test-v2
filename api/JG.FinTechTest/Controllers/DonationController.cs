@@ -35,7 +35,7 @@ namespace JG.FinTechTest.Api.Controllers
         [HttpPost]
         [ProducesResponseType((int) HttpStatusCode.Created, Type = typeof(DonationResponse))]
         [ProducesResponseType((int) HttpStatusCode.BadRequest, Type = typeof(ApiError))]
-        public async Task<ActionResult<DonationResponse>> Post([FromQuery] DonationRequest request)
+        public async Task<ActionResult<DonationResponse>> Post([FromBody] DonationRequest request)
         {
             var response = await _mediator.Send(new RegisterDonationRequest
             {

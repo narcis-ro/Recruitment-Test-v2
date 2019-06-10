@@ -1,7 +1,7 @@
 ﻿using System;
 using JG.FinTechTest.Domain.Data.Model;
 
-namespace JG.FinTechTest.UnitTests.Models
+namespace JG.FinTechTest.Common.Models
 {
     internal class DonationModelBuilder
     {
@@ -15,18 +15,13 @@ namespace JG.FinTechTest.UnitTests.Models
                 DonationAmount = 1,
                 GiftAidAmount = 0.5m,
                 GiftAidReference = "12344",
-                DonorDetails = new DonorDetails
-                {
-                    FirstName = "FirstName",
-                    LastName = "LastName",
-                    PostCode = "12345"
-                }
+                DonorDetails = new DonorDetailsBuilder().Build()
             };
         }
 
-        public DonationModelBuilder With(Donation request)
+        public DonationModelBuilder With(Donation model)
         {
-            _donation = request;
+            _donation = model;
             return this;
         }
 

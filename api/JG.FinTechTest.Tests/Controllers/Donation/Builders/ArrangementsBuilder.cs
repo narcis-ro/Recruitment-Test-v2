@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace JG.FinTechTest.UnitTests.Controllers.Donation
+namespace JG.FinTechTest.UnitTests.Controllers.Donation.Builders
 {
     public class ArrangementsBuilder
     {

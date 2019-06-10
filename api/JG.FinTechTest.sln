@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JG.Infrastructure.AspNetCor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{3A5063EB-1C0E-432C-9ED0-5706D91F8353}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JG.FinTechTest.Common", "JG.FinTechTest.Common\JG.FinTechTest.Common.csproj", "{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{808C8394-E73F-4562-BCEA-77909E8438B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{808C8394-E73F-4562-BCEA-77909E8438B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{808C8394-E73F-4562-BCEA-77909E8438B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{3DF58D29-D372-44C9-835E-C3B0E09829C9} = {795A4194-F876-4F5B-8263-214AC0B5A7D1}
 		{7158A469-79DA-4180-8D04-179D532096CB} = {3A5063EB-1C0E-432C-9ED0-5706D91F8353}
 		{808C8394-E73F-4562-BCEA-77909E8438B2} = {3A5063EB-1C0E-432C-9ED0-5706D91F8353}
+		{0F56D811-39BB-43B0-ACD9-9229F2B3CDC2} = {795A4194-F876-4F5B-8263-214AC0B5A7D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B8E10C4-1C41-47E3-9985-5131F84E44CB}

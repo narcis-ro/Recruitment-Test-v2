@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Sandbox\just-give\JG.FinTechTest\JG.FinTechTest.xml</DocumentationFile>
+    <DocumentationFile>JG.FinTechTest.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

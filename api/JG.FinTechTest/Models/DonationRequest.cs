@@ -40,7 +40,9 @@ namespace JG.FinTechTest.Api.Models
             if (config == null) throw new ArgumentNullException(nameof(config));
 
             RuleFor(x => x.Amount)
-                .NotEmpty().GreaterThan(config.MinDonationAmount).LessThan(config.MaxDonationAmount ?? decimal.MaxValue);
+                .NotEmpty()
+                // Note: This means the max value is not allowed, although if the value is null it should.
+                .GreaterThanOrEqualTo(config.MinDonationAmount).LessThan(config.MaxDonationAmount ?? decimal.MaxValue);
 
             RuleFor(x => x.FirstName).NotEmpty();
             RuleFor(x => x.LastName).NotEmpty();

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JG.FinTechTest.Api.Models;
 using JG.FinTechTest.Domain.Requests;
+using JG.FinTechTest.UnitTests.Controllers.Donation.Builders;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 

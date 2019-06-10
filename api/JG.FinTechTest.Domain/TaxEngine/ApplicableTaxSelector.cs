@@ -37,7 +37,7 @@ namespace JG.FinTechTest.Domain.TaxEngine
 
             var now = DateTimeOffset.UtcNow;
 
-            var taxConfig = _taxes[taxType].FirstOrDefault(s => s.TaxType == taxType && s.FromDate >= now && (s.ToDate == default || s.ToDate < now));
+            var taxConfig = _taxes[taxType].FirstOrDefault(s => s.FromDate <= now && (!s.ToDate.HasValue || s.ToDate > now));
 
             if (taxConfig == default)
             {

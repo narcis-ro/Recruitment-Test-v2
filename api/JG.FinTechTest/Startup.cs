@@ -134,15 +134,15 @@ namespace JG.FinTechTest.Api
             });
 
 
-            // Note: Middleware Order: 1. For services behind reverse proxy. By convention all reverse proxies forward headers from the original request as headers named x-forwarded-*
+            // Note: For services behind reverse proxy. By convention all reverse proxies forward headers from the original request as headers named x-forwarded-*
             app.UseForwardedHeaders();
-            // Mote: Middleware Order: 2. Preflight requests do not need to be authenticated. 
-            app.UseCors("AllowAllOrigins");
-            // Note: Middleware Order: 3. Adds the correlation id headers
+            // Mote: Preflight requests do not need to be authenticated. 
+            app.UseCors(DefaultCorsPolicy);
+            // Note: Adds the correlation id headers
             app.UseCorrelationId();
-            // Note: Middleware Order: 4. Global error handling comes immediately after Correlation, in order for log entries to have correlation info
+            // Note: Global error handling comes immediately after Correlation, in order for log entries to have correlation info
             app.UseSafeExceptions();
-            // Note: Middleware Order: 5. This should come immediately after Global error handling. This middleware logs unhandled exceptions, but does not handle them.
+            // Note: This should come immediately after Global error handling. This middleware logs unhandled exceptions, but does not handle them.
             app.UseRequestLogging();
 
 

@@ -2,114 +2,145 @@
 
 <div class="container">
 
-  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="!sent">
-    <h1 class="display-4">Make a Donation</h1>
-    <p class="lead">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nunc magna, fermentum et erat eu, dictum
-      consequat urna. Cras vitae efficitur elit. Suspendisse potenti. Fusce tincidunt sapien commodo lacus eleifend
-      gravida.
-    </p>
-  </div>
 
-  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="sent">
-    <h1 class="display-4">Thank you for your donation</h1>
-    <p class="lead">
-      Donation Id: {{donationResponse.donationId}} | Gift Aid Reference: {{donationResponse.giftAidReference}} <br>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nunc magna, fermentum et erat eu, dictum
-      consequat urna. Cras vitae efficitur elit. Suspendisse potenti. Fusce tincidunt sapien commodo lacus eleifend
-      gravida.
-    </p>
-    <button class="btn btn-success" (click)="reset()">Make another donation</button>
-  </div>
+  <!--HOME SCREEN-->
+  <ng-container *ngIf="!sent">
 
-
-  <div *ngIf="!sent">
-
-
-    <div class="row mb-2">
-      <div class="col-md-8">
-        <h4>Donation Info</h4>
-      </div>
-      <div class="col-md-4">
-        <h4>Tax Info</h4>
-      </div>
+    <!--HEADER-->
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">Make a Donation</h1>
+      <p class="lead">
+        Donating through JustGiving is simple, fast and totally secure. Your details are safe with JustGiving - they'll never sell them on or send unwanted emails.
+        Once you donate, they'll send your money directly to the charity. So it's the most efficient way to donate - saving time and cutting costs for the charity.
+      </p>
     </div>
 
 
+    <!--DONATION FORM-->
     <div class="row">
       <div class="col-md-8">
+        <h4>Donation Info</h4>
         <div class="row"  fxLayout="row" fxLayoutAlign="space-between center" >
           <div class="col-md-3"><small class="text-muted">{{min_amount | currency: currency_name}}</small></div>
           <h2>{{amount | currency: currency_name}}</h2>
-          <div class="col-md-3 text-right"><small class="text-muted">{{max_slider | currency: currency_name}}</small></div>
+          <div class="col-md-3 text-right"><small class="text-muted">{{max_slider | currency: currency_name}}+</small></div>
         </div>
 
         <mat-slider
-          class="w-100"
-          [max]="max_slider"
-          [min]="min_amount"
-          [step]="50"
-          [tickInterval]="50"
-          [(ngModel)]="amount">
+                class="w-100"
+                [max]="max_slider"
+                tickInterval="20"
+                step="5"
+                [(ngModel)]="amount">
         </mat-slider>
 
 
         <form [formGroup]="donationForm">
-        <div class="form-row">
-          <div class="form-group col-6">
-            <input formControlName="firstName" type="text" class="form-control" placeholder="Name" value=""/>
+          <div class="form-row">
+            <div class="form-group col-6">
+              <input formControlName="firstName" type="text" class="form-control"
+                     [ngClass]="{'is-invalid': checkControlValidity(formFields.firstName)}"
+                     placeholder="Name" value=""/>
+            </div>
+            <div class="form-group col-6">
+              <input formControlName="lastName" type="text" class="form-control"
+                     [ngClass]="{'is-invalid': checkControlValidity(formFields.lastName)}"
+                     placeholder="Surname" value=""/>
+            </div>
           </div>
-          <div class="form-group col-6">
-            <input formControlName="lastName" type="text" class="form-control" placeholder="Name" value=""/>
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-group col-6">
-            <input formControlName="amount" type="number" [(ngModel)]="amount" class="form-control" placeholder="Amount" value=""/>
+          <div class="form-row">
+            <div class="form-group col-6">
+              <input formControlName="amount" type="number" [(ngModel)]="amount" class="form-control"
+                     [ngClass]="{'is-invalid': checkControlValidity(formFields.amount)}"
+                     placeholder="Amount" value=""/>
+            </div>
+            <div class="form-group col-6">
+              <input formControlName="postCode" type="text" class="form-control"
+                     [ngClass]="{'is-invalid': checkControlValidity(formFields.postCode)}"
+                     placeholder="Post Code" value=""/>
+            </div>
           </div>
-          <div class="form-group col-6">
-            <input formControlName="postCode" type="text" class="form-control" placeholder="Postal Code" value=""/>
-          </div>
-        </div>
         </form>
         <button type="button" class="btn btn-lg btn-block btn-primary" [disabled]="!donationForm.valid || isSending || isCalculating" (click)="send()">Donate!</button>
       </div>
 
 
       <div class="col-md-4">
+        <h4>Tax Info</h4>
         <ul class="list-group mb-3">
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Tax rate</h6>
-              <small class="text-muted">Brief description</small>
+              <small class="text-muted">Gov tax applied to donation</small>
             </div>
-            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.taxRate | number}}%</span>
-            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+            <span class="text-muted" *ngIf="!isCalculatingSlow">{{(taxInfo$ | async)?.taxRate | number}}%</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculatingSlow"></mat-spinner>
           </li>
 
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Gift aid</h6>
-              <small class="text-muted">Brief description</small>
+              <small class="text-muted">Extra donation value from Gift-Aid</small>
             </div>
-            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.giftAid | currency: currency_name}}</span>
-            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+            <span class="text-muted" *ngIf="!isCalculatingSlow">{{(taxInfo$ | async)?.giftAid | currency: currency_name}}</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculatingSlow"></mat-spinner>
           </li>
 
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">Total donation</h6>
-              <small class="text-muted">Brief description</small>
+              <small class="text-muted">Your total donation</small>
             </div>
-            <span class="text-muted" *ngIf="!isCalculating">{{(taxInfo$ | async)?.totalAmount | currency: currency_name}}</span>
-            <mat-spinner [diameter]="20" *ngIf="isCalculating"></mat-spinner>
+            <span class="text-muted" *ngIf="!isCalculatingSlow">{{(taxInfo$ | async)?.totalAmount | currency: currency_name}}</span>
+            <mat-spinner [diameter]="20" *ngIf="isCalculatingSlow"></mat-spinner>
           </li>
         </ul>
       </div>
     </div>
+
+  </ng-container>
+
+
+  <!--SUCCESS SCREEN-->
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center" *ngIf="sent">
+
+    <h1 class="display-4">Thank you for your donation{{', ' + donationForm.get(formFields.firstName).value}}</h1>
+    <p class="lead">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse nunc magna, fermentum et erat eu, dictum
+    consequat urna. Cras vitae efficitur elit. Suspendisse potenti. Fusce tincidunt sapien commodo lacus eleifend
+    gravida.
+    </p>
+
+    <div class="card-deck mb-3 col-md-6 m-auto">
+
+      <div class="card mb-4 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Donation Details</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title">{{amount + donationResponse.giftAidAmount | currency: currency_name}}</h1>
+          <div class="row">
+            <div class="col-md-6 text-right">Donor:</div>
+            <div class="col-md-6 font-weight-bold text-left">{{donationForm.get(formFields.firstName).value + ' ' + donationForm.get(formFields.lastName).value}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">Donation Ref:</div>
+            <div class="col-md-6 font-weight-bold text-left">{{donationResponse?.donationReference}}</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 text-right">Gift Aid Declaration Ref:</div>
+            <div class="col-md-6 font-weight-bold text-left">{{donationResponse?.giftAidReference}}</div>
+          </div>
+
+          <button type="button" class="btn btn-lg btn-block btn-outline-primary mt-3" (click)="reset()">Make another donation</button>
+        </div>
+      </div>
+
+    </div>
   </div>
+
 </div>
-<footer class="text-center mt-5">
+<footer class="text-center mt-3">
   <p>Copyright 2019</p>
 </footer>

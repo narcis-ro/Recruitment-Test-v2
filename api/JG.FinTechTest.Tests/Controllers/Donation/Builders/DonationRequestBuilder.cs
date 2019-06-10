@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using JG.FinTechTest.Api.Models;
 
-namespace JG.FinTechTest.UnitTests.Controllers.Donation
+namespace JG.FinTechTest.UnitTests.Controllers.Donation.Builders
 {
     internal class DonationRequestBuilder
     {

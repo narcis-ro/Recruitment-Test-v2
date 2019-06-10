@@ -1,103 +1,140 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy} from '@angular/core';
-import {CURRENCY_CODE} from '../../core/tokens/currency.token';
+import {AfterViewInit, Component, Inject, OnDestroy} from '@angular/core';
+import {CURRENCY_CODE} from '../core/tokens/currency.token';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {GiftAidService} from '../services/gift-aid.service';
-import {debounceTime, finalize, map, shareReplay, startWith, takeUntil, throttleTime} from 'rxjs/operators';
+import {GiftAidService} from '../core/services/gift-aid.service';
+import {debounceTime, distinctUntilChanged, finalize, map, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {concatMap} from 'rxjs/internal/operators/concatMap';
 import {tap} from 'rxjs/internal/operators/tap';
-import {ISendDonationDto} from '../services/models/gift-aid.models';
+import {ISendDonationDto} from '../core/services/models/gift-aid.models';
+import {MatSnackBar} from '@angular/material';
+import {filter} from 'rxjs/internal/operators/filter';
 
 export class TaxInfoModel {
-  amount: number;
-  giftAid: number;
-  taxRate: number;
-  totalAmount: number;
+    amount: number;
+    giftAid: number;
+    taxRate: number;
+    totalAmount: number;
 
-  constructor(content: Partial<TaxInfoModel>) {
-    Object.assign(this, content);
-    if (content.giftAid) {
-      this.totalAmount = this.amount + this.giftAid;
-      this.taxRate = (this.giftAid / this.totalAmount) * 100;
+    constructor(content: Partial<TaxInfoModel>) {
+        Object.assign(this, content);
+        if (content.giftAid) {
+            this.totalAmount = this.amount + this.giftAid;
+            this.taxRate = (this.giftAid / this.totalAmount) * 100;
+        }
     }
-  }
+}
+
+export enum DonationFormFieldsEnum {
+    firstName = 'firstName',
+    lastName = 'lastName',
+    amount = 'amount',
+    postCode = 'postCode'
 }
 
 @Component({
-  selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+    selector: 'app-main',
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnDestroy, AfterViewInit {
 
-  amount: number = 50;
-  default_amount = 50;
-  min_amount: number = 2;
-  max_amount: number = 100000;
-  max_slider: number = 1000;
-  isSending: boolean = false;
-  isCalculating: boolean = false;
-  sent: boolean;
+    amount: number = 50;
+    default_amount = 50;
+    min_amount: number = 2;
+    max_amount: number = 100000;
 
-  donationResponse: ISendDonationDto;
+    max_slider: number = 1000;
 
-  taxInfo$: Observable<TaxInfoModel>;
-  _destroy$ = new Subject();
+    isSending: boolean = false;
+    isCalculating: boolean = false;
+    isCalculatingSlow: boolean = false;
+    sent: boolean = false;
 
-  donationForm: FormGroup;
+    donationResponse: ISendDonationDto;
 
-  constructor(@Inject(CURRENCY_CODE) public currency_name: string, private giftAidService: GiftAidService) {
-    this.initForm();
-  }
+    taxInfo$: Observable<TaxInfoModel>;
+    _destroy$ = new Subject();
 
-  send(): void {
-    if (!this.donationForm.valid) {
-      alert('ERROR');
-      return;
+    donationForm: FormGroup;
+    formFields = DonationFormFieldsEnum;
+
+    constructor(@Inject(CURRENCY_CODE) public currency_name: string,
+                private giftAidService: GiftAidService,
+                private snackBar: MatSnackBar) {
+        this.initForm();
     }
 
-    this.isSending = true;
-    this.giftAidService.sendDonation(this.donationForm.getRawValue()).pipe(
-      tap(r => {
-        this.sent = true;
-        this.donationResponse = r;
-      }),
-      finalize(() => this.isSending = false),
-      takeUntil(this._destroy$)
-    ).subscribe();
-  }
+    send(): void {
+        if (!this.donationForm.valid) {
+            this.snackBar.open('Donation form is invalid, please check the input values');
+            return;
+        }
 
-  reset(): void {
-    this.donationForm.reset(undefined, {emitEvent: false});
-    this.amount = this.default_amount;
-    this.sent = false;
-  }
+        this.isSending = true;
+        this.giftAidService.sendDonation(this.donationForm.getRawValue()).pipe(
+            tap(r => {
+                this.sent = true;
+                this.donationResponse = r;
+            }),
+            finalize(() => this.isSending = false),
+            takeUntil(this._destroy$)
+        ).subscribe();
+    }
 
-  private initForm() {
-    this.donationForm = new FormGroup({
-      firstName: new FormControl('', Validators.required),
-      lastName: new FormControl('', Validators.required),
-      amount: new FormControl(this.default_amount, [Validators.required, Validators.min(this.min_amount), Validators.max(this.max_amount)]),
-      postCode: new FormControl('', Validators.required)
-    });
-  }
+    reset(): void {
+        this.donationForm.reset(undefined, {emitEvent: false});
+        this.amount = this.default_amount;
+        this.sent = false;
+    }
 
-  ngAfterViewInit(): void {
-    this.taxInfo$ = this.donationForm.get('amount').valueChanges.pipe(
-      startWith(this.amount),
-      debounceTime(500),
-      tap(() => this.isCalculating = true),
-      concatMap(amount => this.giftAidService.getGiftAid(amount)),
-      map(response => new TaxInfoModel({amount: response.donationAmount, giftAid: response.giftAidAmount})),
-      tap(() => this.isCalculating = false),
-      takeUntil(this._destroy$),
-      shareReplay()
-    );
-  }
+    ngAfterViewInit(): void {
+        this.taxInfo$ = this.donationForm.get(DonationFormFieldsEnum.amount).valueChanges.pipe(
+            startWith(this.amount),
+            distinctUntilChanged(),
+            filter(s => this.donationForm.get(this.formFields.amount).valid),
+            debounceTime(200),
+            // Note: We do not want to show a loading progress bar if the request completes very fast
+            // Note: If this finishes after the server response isCalculating will be false.
+            tap(() => {
+                this.isCalculating = true;
+                this.isCalculatingSlow = false;
+                setTimeout(() => {
+                    if (this.isCalculating) {
+                        this.isCalculatingSlow = true;
+                    }
+                }, 200);
+            }),
+            switchMap(amount => this.giftAidService.getGiftAid(amount)),
+            map(response => new TaxInfoModel({amount: response.donationAmount, giftAid: response.giftAidAmount})),
+            tap(() => {
+                this.isCalculating = false;
+                this.isCalculatingSlow = false;
+            }),
+            takeUntil(this._destroy$),
+            shareReplay()
+        );
+    }
 
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
-  }
+    checkControlValidity(controlName: DonationFormFieldsEnum): boolean {
+        const control = this.donationForm.get(controlName);
+        return control.dirty && control.invalid || control.touched && control.invalid;
+    }
+
+    ngOnDestroy(): void {
+        this._destroy$.next();
+        this._destroy$.complete();
+    }
+
+    private initForm() {
+        this.donationForm = new FormGroup({
+            [this.formFields.firstName]: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
+            [this.formFields.lastName]: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
+            [this.formFields.amount]: new FormControl(
+                this.default_amount, [Validators.required, Validators.min(this.min_amount), Validators.max(this.max_amount)]
+            ),
+            [this.formFields.postCode]: new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,}')])
+        });
+    }
 
 }

@@ -4,7 +4,7 @@ namespace JG.Infrastructure.Utils
 {
     public static class FriendlyUId
     {
-        private const string Base62Chars =
+        private const string BASE62_CHARS =
             "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
         public static string NewId(int length = 6)
@@ -12,7 +12,7 @@ namespace JG.Infrastructure.Utils
             return string.Create(6, new Random(), (chars, random) =>
             {
                 for (var i = 0; i < chars.Length; i++)
-                    chars[i] = Base62Chars[random.Next(chars.Length)];
+                    chars[i] = BASE62_CHARS[random.Next(BASE62_CHARS.Length)];
             });
         }
     }

@@ -59,7 +59,7 @@ namespace JG.FinTechTest.Domain.Handlers
                 DonationId = donation.Id,
                 DonationAmount = donation.DonationAmount,
                 GiftAidAmount = donation.GiftAidAmount,
-                GiftAidRef = donation.GiftAidReference,
+                GiftAidReference = donation.GiftAidReference,
                 DonorDetails = donation.DonorDetails,
                 Created = DateTimeOffset.Now
             };

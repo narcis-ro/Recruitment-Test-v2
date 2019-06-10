@@ -1,8 +1,8 @@
 ﻿using System;
+using JG.FinTechTest.Common.Models;
 using JG.FinTechTest.Domain.Requests;
-using JG.FinTechTest.UnitTests.Models;
 
-namespace JG.FinTechTest.UnitTests.Controllers.Donation
+namespace JG.FinTechTest.UnitTests.Controllers.Donation.Builders
 {
     internal class RegisterDonationResponseBuilder
     {

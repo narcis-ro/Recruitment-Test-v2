@@ -2,7 +2,7 @@
 
 To say that this exercise has been over-engineered, would probably be the understatement of the year :). It has been purposely done so in order to show the recruiter proof of experience and competence.
 
-Most of the infrastructure code has been brought in from previous projects. There was no sense in developing again all the cross cutting concerns such as logging, correlation, start-up task, etc. Of course there are many ways to do it, project requirements matter a lot.
+Most of the infrastructure code has been brought in from previous projects, but was developed 100% by myself. There was just no sense in re-implementinga again all the cross cutting concerns such as logging, correlation, start-up task, etc. Of course there are many ways to do it, project requirements matter a lot.
 
 Sample unit-tests can be found in the following classes: `DonationControllerTests`, `DonationHandlerTests`, `DonationRequestValidatorTests`. 
 

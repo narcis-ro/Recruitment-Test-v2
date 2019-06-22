@@ -6,13 +6,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JG.Infrastructure.Constants;
 using JG.Infrastructure.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.IO;
 using Serilog;
 using Serilog.Events;
+using static JG.Infrastructure.Constants.HttpHeaders;
+using static JG.Infrastructure.Logging.LogProps;
 
 namespace JG.Infrastructure.AspNetCore.Logging
 {
@@ -21,7 +22,7 @@ namespace JG.Infrastructure.AspNetCore.Logging
     /// </summary>
     public class RequestLoggingMiddleware
     {
-        private const string MessageTemplate =
+        private const string MESSAGE_TEMPLATE =
             "HTTP {Verb} to {Path} responded with {StatusCode} in {Elapsed:0.0000} ms";
 
         private readonly ILogger _logger;
@@ -47,12 +48,14 @@ namespace JG.Infrastructure.AspNetCore.Logging
 
             var stopwatch = new Stopwatch();
 
+            httpContext.Request.EnableBuffering();
+            httpContext.Request.EnableRewind();
+
             var requestLogContext = new ConcurrentDictionary<string, object>();
             var requestLogContextForError = new ConcurrentDictionary<string, object>();
-
-
-            httpContext.Items.Add(LogProps.REQUEST_LOG_CONTEXT_ITEM, requestLogContext);
-            httpContext.Items.Add(LogProps.REQUEST_LOG_CONTEXT_FOR_ERROR_ITEM, requestLogContextForError);
+            
+            httpContext.Items.Add(REQUEST_LOG_CONTEXT_ITEM, requestLogContext);
+            httpContext.Items.Add(REQUEST_LOG_CONTEXT_FOR_ERROR_ITEM, requestLogContextForError);
 
             var originalBodyStream = httpContext.Response.Body;
 
@@ -76,14 +79,14 @@ namespace JG.Infrastructure.AspNetCore.Logging
                     var contextualLogger = await PopulateLogContext(_logger, httpContext, responseBody,
                         requestLogContext, requestLogContextForError, forError);
 
-                    contextualLogger.Write(level, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path,
+                    contextualLogger.Write(level, MESSAGE_TEMPLATE, httpContext.Request.Method, httpContext.Request.Path,
                         statusCode, stopwatch.Elapsed.TotalMilliseconds);
                 }
                 catch (Exception ex)
                 {
                     (await PopulateLogContext(_logger, httpContext, responseBody, requestLogContext,
                             requestLogContextForError, true))
-                        .Error(ex, MessageTemplate, httpContext.Request.Method, httpContext.Request.Path, 500,
+                        .Error(ex, MESSAGE_TEMPLATE, httpContext.Request.Method, httpContext.Request.Path, 500,
                             stopwatch.Elapsed.TotalMilliseconds);
 
                     // Note: The MVC Exception filter should have caught the error. If it got to this point, it means it
@@ -109,18 +112,18 @@ namespace JG.Infrastructure.AspNetCore.Logging
 
                 var props = new Dictionary<string, object>(requestLogContext)
                 {
-                    [LogProps.QUERY] = request.QueryString.ToString()
+                    [QUERY] = request.QueryString.ToString()
                 };
 
                 var upstreamServiceName =
-                    request.Headers.FirstOrDefault(s => s.Key == HttpHeaders.X_ORIGIN_SERVICE_NAME);
-                var upstreamServiceId = request.Headers.FirstOrDefault(s => s.Key == HttpHeaders.X_ORIGIN_SERVICE_ID);
+                    request.Headers.FirstOrDefault(s => s.Key == X_ORIGIN_SERVICE_NAME);
+                var upstreamServiceId = request.Headers.FirstOrDefault(s => s.Key == X_ORIGIN_SERVICE_ID);
 
                 if (upstreamServiceId.Key != default)
-                    props[LogProps.CLIENT_SERVICE_ID] = upstreamServiceId;
+                    props[CLIENT_SERVICE_ID] = upstreamServiceId;
 
                 if (upstreamServiceName.Key != default)
-                    props[LogProps.CLIENT_SERVICE_NAME] = upstreamServiceName;
+                    props[CLIENT_SERVICE_NAME] = upstreamServiceName;
 
 
                 if (forError)
@@ -139,7 +142,7 @@ namespace JG.Infrastructure.AspNetCore.Logging
                     foreach (var pair in projection)
                         props[pair.Key] = pair.Value;
 
-                return logger.ForContext(LogProps.REQUEST_PROP, props, true);
+                return logger.ForContext(REQUEST_PROP, props, true);
             }
             catch (Exception e)
             {
@@ -156,32 +159,24 @@ namespace JG.Infrastructure.AspNetCore.Logging
 
             var props = new Props
             {
-                [LogProps.HEADERS] = request.Headers.Where(h => h.Key != HttpHeaders.AUTHORIZATION)
+                [HEADERS] = request.Headers.Where(h => h.Key != AUTHORIZATION)
                     .ToDictionary(h => h.Key, h => h.Value.ToString())
             };
 
 
             if (request.HasFormContentType)
-                props.Add(LogProps.FORM, request.Form.ToDictionary(v => v.Key, v => v.Value.ToString()));
+                props.Add(FORM, request.Form.ToDictionary(v => v.Key, v => v.Value.ToString()));
 
             if (request.Body != null)
                 try
                 {
-                    request.EnableBuffering();
-                    request.EnableRewind();
+                    request.Body.Seek(0, SeekOrigin.Begin);
 
-                    using (var stream = _recyclableMemoryStreamManager.GetStream())
+                    using (var streamReader = new StreamReader(request.Body))
                     {
-                        await request.Body.CopyToAsync(stream);
-                        stream.Seek(0, SeekOrigin.Begin);
-                        request.Body.Seek(0, SeekOrigin.Begin);
+                        var body = await streamReader.ReadToEndAsync();
 
-                        using (var streamReader = new StreamReader(stream))
-                        {
-                            var body = await streamReader.ReadToEndAsync();
-
-                            props.Add(LogProps.BODY, body);
-                        }
+                        props.Add(BODY, body);
                     }
                 }
                 catch (Exception e)
@@ -200,7 +195,7 @@ namespace JG.Infrastructure.AspNetCore.Logging
                     responseBody.Seek(0, SeekOrigin.Begin);
                     var body = await streamReader.ReadToEndAsync();
 
-                    responseProps.Add(LogProps.BODY, body);
+                    responseProps.Add(BODY, body);
                 }
             }
             catch (Exception e)
@@ -208,7 +203,7 @@ namespace JG.Infrastructure.AspNetCore.Logging
                 _logger.Error(e, "Failed to read http stream body.");
             }
 
-            props.Add(LogProps.RESPONSE, responseProps);
+            props.Add(RESPONSE, responseProps);
 
 
             return props;
